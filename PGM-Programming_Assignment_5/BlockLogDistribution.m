@@ -53,6 +53,15 @@ LogBS = zeros(1, d);
 %
 % Also you should have only ONE for-loop, as for-loops are VERY slow in matlab
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+m = length(V);
+factoridx = unique([G.var2factors{V}]);
+cards = d * ones(1, length(V));
+factorList = F(factoridx);
+for i = 1:d
+	A(V) = i * ones(1, m);
+	LogBS(i) = LogProbOfJointAssignment(factorList, A);
+end
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

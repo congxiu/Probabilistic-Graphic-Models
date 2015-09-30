@@ -10,7 +10,6 @@
 % Copyright (C) Daphne Koller, Stanford University, 2012
 
 function A = MHUniformTrans(A, G, F)
-
 % Draw proposed new state from uniform distribution
 A_prop = ceil(rand(1, length(A)) .* G.card);
 
@@ -19,7 +18,9 @@ p_acceptance = 0.0;
 % YOUR CODE HERE
 % Compute acceptance probability
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+fromX = exp(LogProbOfJointAssignment(F, A));
+toX = exp(LogProbOfJointAssignment(F, A_prop));
+p_acceptance = min(toX / fromX, 1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Accept or reject proposal

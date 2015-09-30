@@ -12,7 +12,6 @@
 % Copyright (C) Daphne Koller, Stanford University, 2012
 
 function A = MHSWTrans(A, G, F, variant)
-
 %%%%%%%%%%%%%% Get Proposal %%%%%%%%%%%%%%
 % Prune edges from q_list if the nodes don't have the same current value
 q_list = G.q_list;
@@ -47,7 +46,7 @@ if variant == 1
     % Specify the log of the distribution (LogR) from 
     % which a new label for Y is selected for variant 1 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+    LogR = log(1 / d * ones(1, d));
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 elseif variant == 2
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -59,7 +58,7 @@ elseif variant == 2
     % before implementing this, one of the generated
     % data structures may be useful in implementing this section
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+    LogR = BlockLogDistribution(selected_vars, G, F, A);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 else
     disp('WARNING: Unrecognized Swendsen-Wang Variant');
@@ -95,7 +94,10 @@ p_acceptance = 0.0;
 % of variables, as well as some ratios used in computing
 % the acceptance probabilitiy.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+LogRR = LogR(old_value) - LogR(new_value);
+LogfromX = LogProbOfJointAssignment(F, A);
+LogtoX = LogProbOfJointAssignment(F, A_prop);
+p_acceptance = min(exp(LogtoX + log_QY_ratio - LogfromX + LogRR), 1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Accept or reject proposal
