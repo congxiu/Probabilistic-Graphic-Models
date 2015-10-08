@@ -20,6 +20,15 @@ function EU = SimpleCalcExpectedUtility(I)
   %
   % YOUR CODE HERE
   %
+  toEliminate = setdiff(unique([F.var]), U.var);
+  UParents = VariableElimination(F, toEliminate);
+  products = U;
+  
+  for i = 1:length(UParents)
+    products = FactorProduct(products, UParents(i));
+  end
+
+  EU = sum(products.val);
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
  

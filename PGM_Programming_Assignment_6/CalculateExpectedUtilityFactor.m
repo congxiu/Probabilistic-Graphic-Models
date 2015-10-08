@@ -16,6 +16,16 @@ function EUF = CalculateExpectedUtilityFactor( I )
   %
   % YOUR CODE HERE...
   %
+  U = I.UtilityFactors(1);
+  decisionVars = I.DecisionFactors.var;
+  allVars = union(unique([I.RandomFactors.var]), decisionVars);
+
+  X = [I.RandomFactors, U];
+  EUFs = VariableElimination(X, setdiff(allVars, decisionVars));
+  EUF = EUFs(1);
+  for i = 2:length(EUFs)
+    EUF = FactorProduct(EUF, EUFs(i));
+  end
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 
 

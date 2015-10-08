@@ -26,8 +26,29 @@ function [MEU OptimalDecisionRule] = OptimizeLinearExpectations( I )
   % a degenerate case we can handle separately for convenience.
   %
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
+  INew = I;
 
+  for i = 1:length(I.UtilityFactors)
+    INew.UtilityFactors = I.UtilityFactors(i);
+    EUFs(i) = CalculateExpectedUtilityFactor(INew);
+  end
+
+  euf = EUFs(1);
+  for i = 2:length(EUFs)
+    euf = FactorSum(euf, EUFs(i));
+  end
+
+  D = I.DecisionFactors(1);
+  OptimalDecisionRule = D;
+  OptimalDecisionRule.val = zeros(1, length(OptimalDecisionRule.val));
+  indices = 1:D.card(1):prod(D.card) + 1;
+  MEU = 0;
+
+  for i = 1:length(indices)-1
+    [currU, k] = max(euf.val(indices(i):indices(i+1) - 1));
+    OptimalDecisionRule.val(indices(i) + k - 1) = 1;
+    MEU = MEU + currU;
+  end
 
 
 end
